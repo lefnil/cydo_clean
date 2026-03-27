@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jewel: #177d49;
+  --color-frostee: #daf2e6;
+  --color-vista: #81d2ad;
+  --color-deyork: #79c69f;
+}
+
+html.dark {
+  --color-jewel: #4ade80;
+  --color-vista: #22c55e;
+  --color-deyork: #16a34a;
+  --color-frostee: #0a0f0d;
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+  
+  body {
+    @apply bg-[hsl(var(--color-frostee))] text-gray-900 min-h-screen;
+    background-image: 
+      radial-gradient(circle at top right, hsl(var(--color-vista) / 0.3) 0%, transparent 50%),
+      radial-gradient(circle at bottom left, hsl(var(--color-deyork) / 0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+html.dark body {
+  @apply text-white;
+  background-color: var(--color-frostee);
+  background-image:
+    radial-gradient(circle at top right, rgba(29, 158, 117, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at bottom left, rgba(23, 125, 73, 0.10) 0%, transparent 40%);
+
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/30 backdrop-blur-md border-2 border-white/30 border-jewel/30 shadow-xl;
+  }
+  
+  html.dark .glass {
+    @apply bg-[hsl(var(--color-jewel)/0.15)] backdrop-blur-md border-2 border-jewel/50 shadow-2xl ring-2 ring-jewel/40;
+  }
+
+  /* Jewel Primary */
+  .btn-jewel {
+    @apply bg-[hsl(var(--color-jewel))] text-white hover:bg-[hsl(var(--color-jewel)/0.9)] border-2 border-[hsl(var(--color-jewel)/0.3)] shadow-lg shadow-[hsl(var(--color-jewel)/0.25)] hover:shadow-xl hover:shadow-[hsl(var(--color-jewel)/0.35)] transition-all font-medium px-4 py-2 rounded-xl focus:ring-4 focus:ring-jewel/50 focus:ring-offset-2;
+  }
+
+  /* Vista */
+  .btn-vista {
+    @apply bg-[hsl(var(--color-vista))] text-white hover:bg-[hsl(var(--color-vista)/0.9)] border-2 border-[hsl(var(--color-vista)/0.3)] shadow-lg shadow-[hsl(var(--color-vista)/0.25)] hover:shadow-xl hover:shadow-[hsl(var(--color-vista)/0.35)] transition-all font-medium px-4 py-2 rounded-xl focus:ring-4 focus:ring-vista/50;
+  }
+
+  /* Deyork */
+  .btn-deyork {
+    @apply bg-[hsl(var(--color-deyork))] text-white hover:bg-[hsl(var(--color-deyork)/0.9)] border-2 border-[hsl(var(--color-deyork)/0.3)] shadow-lg shadow-[hsl(var(--color-deyork)/0.25)] hover:shadow-xl hover:shadow-[hsl(var(--color-deyork)/0.35)] transition-all font-medium px-4 py-2 rounded-xl focus:ring-4 focus:ring-deyork/50;
+  }
+
+  /* Outline */
+  .btn-outline {
+    @apply bg-[hsl(var(--color-frostee))] hover:bg-white text-gray-900 border-2 border-jewel/40 hover:border-jewel hover:shadow-md hover:shadow-jewel/30 transition-all font-medium px-4 py-2 rounded-xl dark:bg-[hsl(var(--color-frostee))] dark:text-white dark:border-jewel/50 dark:hover:bg-[hsl(var(--color-frostee)/0.95)] dark:hover:shadow-jewel/40 focus:ring-4 focus:ring-jewel/50;
+  }
+}
+
+
