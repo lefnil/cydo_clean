@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, FileText, BarChart3, ShieldAlert, Shield, LogOut, Menu, X, ClipboardCheck, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, FileText, BarChart3, ShieldAlert, Shield, LogOut, Menu, X, ClipboardCheck, Sun, Moon, Settings } from 'lucide-react';
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'motion/react';
@@ -21,12 +21,11 @@ export default function Layout() {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard, roles: ['admin', 'sk', 'lydc', 'meal_head', 'office_head'] },
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard, roles: ['admin', 'sk', 'lydc', 'meal_head', 'office_head', 'staff'] },
     { name: 'SK Reports', path: '/sk-reports', icon: FileText, roles: ['admin', 'sk', 'office_head'] },
     { name: 'LYDC Reports', path: '/lydc-reports', icon: FileText, roles: ['admin', 'lydc', 'office_head'] },
     { name: 'MEAL System', path: '/meal', icon: ClipboardCheck, roles: ['admin', 'staff', 'meal_head', 'office_head'] },
-
-    { name: 'Administration', path: '/administration', icon: Shield, roles: ['admin'] },
+    { name: 'Administration', path: '/administration', icon: Shield, roles: ['admin', 'office_head'] },
     { name: 'Audit Logs', path: '/audit-logs', icon: ShieldAlert, roles: ['admin'] },
   ];
 
@@ -137,8 +136,20 @@ export default function Layout() {
         <div className="p-4 border-t border-jewel/10">
           <div className="mb-4 px-4">
             <p className="text-sm font-medium text-jewel truncate">{user?.name}</p>
-            <p className="text-xs text-jewel/60 uppercase tracking-wider">{user?.role}</p>
+            <p className="text-xs text-jewel/60 uppercase tracking-wider">
+              {user?.role === 'office_head' ? 'Office Head'
+                : user?.role === 'meal_head' ? 'MEAL Head'
+                : user?.role}
+            </p>
           </div>
+          <Link
+            to="/account-settings"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-jewel hover:bg-jewel/10 transition-colors mb-2"
+          >
+            <Settings size={20} />
+            <span className="font-medium">Account Settings</span>
+          </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 w-full rounded-xl text-red-600 hover:bg-red-50/50 dark:hover:bg-red-900/20 dark:text-red-400 transition-colors"

@@ -5,6 +5,8 @@ type User = {
   username: string;
   role: string;
   name: string;
+  email?: string;
+  avatar_url?: string;
 };
 
 type AuthContextType = {
@@ -12,6 +14,7 @@ type AuthContextType = {
   login: (user: User, token: string) => void;
   logout: () => void;
   loading: boolean;
+  updateUser: (updatedUser: Partial<User>) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -46,8 +49,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const updateUser = (updatedUser: Partial<User>) => {
+    if (user) {
+      const newUser = { ...user, ...updatedUser };
+      setUser(newUser);
+      sessionStorage.setItem('tcydo_session', JSON.stringify({ user: newUser, token: memoryToken }));
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

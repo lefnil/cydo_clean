@@ -85,6 +85,10 @@ export interface MEALRecord {
   san_miguel: number;
   visayan_village: number;
   outside_tagum: number;
+  
+  // RBAC Assignment
+  assigned_to?: string;   // staff name or id this record is assigned to
+  assigned_by?: string;   // name of meal_head who assigned it
 }
 
 export interface ActivityMonitor {

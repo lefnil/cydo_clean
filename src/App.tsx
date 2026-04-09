@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { lazy, Suspense } from 'react';
+import { useRBAC } from './hooks/useRBAC';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -12,6 +13,7 @@ const LYDCReports = lazy(() => import('./pages/LYDCReports'));
 const AuditLogs = lazy(() => import('./pages/AuditLogs'));
 const MEALSystem = lazy(() => import('./pages/MEALSystem'));
 const Administration = lazy(() => import('./pages/Administration'));
+const AccountSettings = lazy(() => import('./pages/AccountSettings'));
 
 function ProtectedRoute({ children, roles }: { children: React.ReactNode; roles?: string[] }) {
   const { user, loading } = useAuth();
@@ -97,8 +99,20 @@ export default function App() {
               <Route
                 path="administration"
                 element={
-                  <ProtectedRoute roles={['admin']}>
-                    <Administration />
+                  <ProtectedRoute roles={['admin', 'office_head']}>
+                    <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jewel"></div></div>}>
+                      <Administration />
+                    </Suspense>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="account-settings"
+                element={
+                  <ProtectedRoute>
+                    <Suspense fallback={<div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-jewel"></div></div>}>
+                      <AccountSettings />
+                    </Suspense>
                   </ProtectedRoute>
                 }
               />

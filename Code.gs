@@ -1,4 +1,4 @@
-/**
+`/**
  * Tagum City Youth Development Office (TCYDO) - MEAL & Reports Backend
  * Google Apps Script Web App
  */
@@ -84,7 +84,9 @@ function setup() {
       'la_filipina', 'liboganon', 'madaum', 'magdum', 'magugpo_east',
       'magugpo_north', 'magugpo_poblacion', 'magugpo_south', 'magugpo_west',
       'mankilam', 'new_balamban', 'nueva_fuerza', 'pagsabangan', 'pandapan',
-      'san_agustin', 'san_isidro', 'san_miguel', 'visayan_village', 'outside_tagum'
+      'san_agustin', 'san_isidro', 'san_miguel', 'visayan_village', 'outside_tagum',
+      // RBAC Assignment
+      'assigned_to', 'assigned_by'
     ]},
     { name: 'activities', headers: ['id', 'activity_name', 'assigned_to', 'submission_deadline', 'reported_status', 'created_at'] },
     { name: 'audit_logs', headers: ['id', 'user_id', 'action', 'details', 'created_at', 'username'] }
@@ -104,6 +106,8 @@ function setup() {
   if (userSheet.getLastRow() <= 1) {
     var now = new Date().toISOString();
     userSheet.appendRow([generateId(), 'admin', hashPassword('admin123'), 'admin', 'System Administrator', 'admin@tcydo.gov', 'active', now]);
+    userSheet.appendRow([generateId(), 'office_head', hashPassword('head123'), 'office_head', 'Office Head', 'head@tcydo.gov', 'active', now]);
+    userSheet.appendRow([generateId(), 'meal_head', hashPassword('meal123'), 'meal_head', 'MEAL Head', 'meal@tcydo.gov', 'active', now]);
     userSheet.appendRow([generateId(), 'sk_user', hashPassword('sk123'), 'sk', 'SK Representative', 'sk@barangay.gov', 'active', now]);
     userSheet.appendRow([generateId(), 'lydc_user', hashPassword('lydc123'), 'lydc', 'LYDC Representative', 'lydc@tcydo.gov', 'active', now]);
     userSheet.appendRow([generateId(), 'staff1', hashPassword('staff123'), 'staff', 'John Doe', 'john@tcydo.gov', 'active', now]);
@@ -191,6 +195,9 @@ function doPost(e) {
       case 'update_meal_status':
         result = updateMealStatus(params.id, params.status, currentUser);
         break;
+      case 'assign_meal_record':
+        result = assignMealRecord(params, currentUser);
+        break;
 
       // Activities
       case 'get_activities':
@@ -215,6 +222,9 @@ function doPost(e) {
         break;
       case 'update_user':
         result = updateUser(params, currentUser);
+        break;
+      case 'change_password':
+        result = changePassword(params, currentUser);
         break;
       case 'delete_user':
         result = deleteUser(params.id, currentUser);
@@ -327,6 +337,12 @@ function createReport(sheetName, params, user) {
 }
 
 function updateReportStatus(sheetName, id, status, user) {
+  // RBAC: Only office_head and admin can set 'approved'
+  var approvalRoles = ['admin', 'office_head'];
+  if (status === 'approved' && approvalRoles.indexOf(user.role) === -1) {
+    return { error: 'Forbidden: Only the Office Head can approve reports.' };
+  }
+
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
@@ -546,6 +562,12 @@ function updateMealRecord(params, user) {
 }
 
 function updateMealStatus(id, status, user) {
+  // Only office_head and admin can set the final 'approved' status
+  var approvalRoles = ['admin', 'office_head'];
+  if (status === 'approved' && approvalRoles.indexOf(user.role) === -1) {
+    return { error: 'Forbidden: Only the Office Head can definitively approve records.' };
+  }
+
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('meal_records');
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
@@ -560,6 +582,42 @@ function updateMealStatus(id, status, user) {
     }
   }
   throw new Error("MEAL record not found");
+}
+
+/**
+ * Assigns a meal record to a staff member.
+ * Allowed roles: admin, office_head, meal_head
+ */
+function assignMealRecord(params, user) {
+  var allowedRoles = ['admin', 'office_head', 'meal_head'];
+  if (allowedRoles.indexOf(user.role) === -1) {
+    return { error: 'Forbidden: Only meal heads and office heads can assign records.' };
+  }
+  if (!params.id || !params.assigned_to) {
+    return { error: 'Missing required fields: id, assigned_to' };
+  }
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('meal_records');
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0];
+  var idCol = headers.indexOf('id');
+  var assignedToCol = headers.indexOf('assigned_to');
+  var assignedByCol = headers.indexOf('assigned_by');
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][idCol] === params.id) {
+      if (assignedToCol >= 0) {
+        sheet.getRange(i + 1, assignedToCol + 1).setValue(params.assigned_to);
+      }
+      if (assignedByCol >= 0) {
+        sheet.getRange(i + 1, assignedByCol + 1).setValue(user.name);
+      }
+      logAction(user.id, user.name, 'ASSIGN_MEAL_RECORD',
+        'Assigned record ' + params.id + ' to ' + params.assigned_to);
+      return { id: params.id, assigned_to: params.assigned_to, assigned_by: user.name };
+    }
+  }
+  throw new Error('MEAL record not found');
 }
 
 function deleteMealRecord(id, user) {
@@ -655,6 +713,9 @@ function getUsers() {
 }
 
 function createUser(params, user) {
+  if (user.role !== 'admin' && user.role !== 'office_head') {
+    return { error: 'Unauthorized: Only administrators can create users.' };
+  }
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('users');
   var id = generateId();
   var now = new Date().toISOString();
@@ -675,6 +736,11 @@ function createUser(params, user) {
 }
 
 function updateUser(params, user) {
+  // Allow users to update their own info or admins to update any user
+  if (params.id !== user.id && user.role !== 'admin' && user.role !== 'office_head') {
+    return { error: 'Unauthorized: You can only update your own profile.' };
+  }
+
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('users');
   var data = sheet.getDataRange().getValues();
   var headers = data[0];
@@ -704,13 +770,60 @@ function updateUser(params, user) {
         sheet.getRange(i + 1, pwdCol + 1).setValue(hashPassword(params.password));
       }
       logAction(user.id, user.name, 'UPDATE_USER', 'Updated user: ' + params.id);
-      return { id: params.id };
+      return { id: params.id, username: params.username, name: params.name };
+    }
+  }
+  throw new Error("User not found");
+}
+
+/**
+ * Change password for authenticated user
+ * Allows users to change their own password by verifying current password
+ */
+function changePassword(params, user) {
+  if (!params.id || !params.currentPassword || !params.newPassword) {
+    return { error: 'Missing required fields: id, currentPassword, newPassword' };
+  }
+
+  if (params.newPassword.length < 6) {
+    return { error: 'New password must be at least 6 characters.' };
+  }
+
+  // Users can only change their own password
+  if (params.id !== user.id) {
+    return { error: 'Unauthorized: You can only change your own password.' };
+  }
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('users');
+  var data = sheet.getDataRange().getValues();
+  var headers = data[0];
+  var idCol = headers.indexOf('id');
+  var pwdCol = headers.indexOf('password');
+  var usernameCol = headers.indexOf('username');
+
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][idCol] === params.id) {
+      var storedPassword = data[i][pwdCol];
+      var username = data[i][usernameCol];
+
+      // Verify current password
+      if (storedPassword !== hashPassword(params.currentPassword)) {
+        return { error: 'Current password is incorrect.' };
+      }
+
+      // Update with new password
+      sheet.getRange(i + 1, pwdCol + 1).setValue(hashPassword(params.newPassword));
+      logAction(user.id, user.name, 'CHANGE_PASSWORD', 'User changed their password');
+      return { success: true, message: 'Password changed successfully.' };
     }
   }
   throw new Error("User not found");
 }
 
 function deleteUser(id, user) {
+  if (user.role !== 'admin' && user.role !== 'office_head') {
+    return { error: 'Unauthorized: Only administrators can delete users.' };
+  }
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('users');
   var data = sheet.getDataRange().getValues();
   var headers = data[0];

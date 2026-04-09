@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { FileText, Activity, Eye } from 'lucide-react';
+import { FileText, Activity, Eye, Clock } from 'lucide-react';
 // import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SearchFilter } from './ui/SearchFilter';
 import { DataTable, mealColumns, activityColumns } from './ui/DataTable';
@@ -12,21 +12,45 @@ interface ReportsTabProps {
   activities?: ActivityMonitor[];
   onViewDetails: (record: MEALRecord) => void;
   onViewActivityDetails?: (activity: ActivityMonitor) => void;
+  /** When true, shows impending-deadline filter and urgency badges */
+  isMealHead?: boolean;
 }
 
 export const ReportsTab: React.FC<ReportsTabProps> = ({
   records,
   activities = [],
   onViewDetails,
-  onViewActivityDetails
+  onViewActivityDetails,
+  isMealHead = false,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'reports' | 'activities'>('reports');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [showDeadlineFilter, setShowDeadlineFilter] = useState(false);
+
+  // ── Impending deadline logic (meal_head focus) ────────────────────────
+  const DEADLINE_WINDOW_DAYS = 7;
+
+  const recordsWithDeadlineFlag = useMemo(() => records.map(r => {
+    const end = r.end_date ? new Date(r.end_date) : null;
+    const now = new Date();
+    const daysLeft = end ? Math.ceil((end.getTime() - now.getTime()) / 86_400_000) : null;
+    return {
+      ...r,
+      _daysLeft: daysLeft,
+      _isUrgent: daysLeft !== null && daysLeft >= 0 && daysLeft <= DEADLINE_WINDOW_DAYS,
+    };
+  }), [records]);
+
+  const baseRecords = useMemo(() =>
+    (isMealHead && showDeadlineFilter)
+      ? recordsWithDeadlineFlag.filter(r => r._isUrgent)
+      : recordsWithDeadlineFlag,
+  [isMealHead, showDeadlineFilter, recordsWithDeadlineFlag]);
 
   // My Reports Logic
   const userPpaNames = useMemo(() => 
-    records.map(r => r.ppa_name?.toLowerCase()).filter(Boolean), [records]
+    baseRecords.map(r => r.ppa_name?.toLowerCase()).filter(Boolean), [baseRecords]
   );
 
   const relatedActivities = useMemo(() => 
@@ -40,12 +64,12 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
   );
 
   const filteredReports = useMemo(() => 
-    records.filter(r => {
+    baseRecords.filter(r => {
       const matchesSearch = r.ppa_name?.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = filterStatus === 'all' || r.status === filterStatus;
       return matchesSearch && matchesStatus;
     }).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
-  [records, searchTerm, filterStatus]);
+  [baseRecords, searchTerm, filterStatus]);
 
   const statusOptions = useMemo(() => [
     { value: 'all', label: 'All Status' },
@@ -120,6 +144,26 @@ export const ReportsTab: React.FC<ReportsTabProps> = ({
           Related Activities ({relatedActivities.length})
         </button>
       </div>
+
+      {/* Deadline filter — meal_head only */}
+      {isMealHead && (
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowDeadlineFilter(prev => !prev)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+              showDeadlineFilter
+                ? 'bg-amber-500 text-white border-amber-500'
+                : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+            }`}
+          >
+            <Clock size={16} />
+            {showDeadlineFilter ? 'Showing Impending Deadlines' : 'Filter: Impending Deadlines (≤7 days)'}
+          </button>
+          {showDeadlineFilter && (
+            <span className="text-sm text-amber-600">{filteredReports.length} report(s) expiring soon</span>
+          )}
+        </div>
+      )}
 
       {/* Filters */}
       <SearchFilter
