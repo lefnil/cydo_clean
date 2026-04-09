@@ -765,68 +765,69 @@ export default function Administration() {
           </div>
 
           <div className="glass rounded-3xl overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="glass rounded-3x1 bg-frostee/30 border border-jewel">
-                <tr>
-                  <th className="py-4 px-6 font-semibold text-jewel">User</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Email</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Role</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Status</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Created</th>
-                  <th className="py-4 px-6 font-semibold text-jewel text-right">Actions</th>
-                </tr>
-              </thead>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-frostee/30 border-b border-jewel/30 sticky top-0">
+                  <tr>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">User</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Email</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Role</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Status</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Created</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap text-right">Actions</th>
+                  </tr>
+                </thead>
               <tbody>
                 {filteredUsers.map((u) => (
-                  <tr key={u.id} className="border-b border-jewel/5 hover:bg-white/30">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-jewel/10 rounded-full flex items-center justify-center">
-                          <span className="text-jewel font-medium text-sm">
+                  <tr key={u.id} className="border-b border-jewel/5 hover:bg-white/30 transition-colors">
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div className="w-8 h-8 bg-jewel/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-jewel font-medium text-xs">
                             {u.name?.split(' ').map(n => n[0]).join('')}
                           </span>
                         </div>
-                        <span className="font-medium text-jewel">{u.name}</span>
+                        <span className="font-medium text-jewel truncate text-xs sm:text-sm">{u.name}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-jewel/80">{u.email}</td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRoleBadge(u.role)}`}>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 truncate max-w-[120px] text-xs sm:text-sm">{u.email}</td>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getRoleBadge(u.role)}`}>
                         {u.role ? u.role.toUpperCase() : 'UNKNOWN'}
                       </span>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
                         u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                       }`}>
                         {formatStatus(u.status)}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-jewel/80">
-                      {new Date(u.created_at).toLocaleDateString()}
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 whitespace-nowrap text-xs sm:text-sm">
+                      {new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </td>
-<td className="py-4 px-6 text-right">
-                      <div className="flex items-center justify-end gap-2">
+<td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-right">
+                      <div className="flex items-center justify-end gap-1 sm:gap-2 flex-shrink-0">
                         <button 
                           onClick={() => handlePasswordResetClick(u)}
-                          className="p-2 text-amber-500 hover:bg-amber-50 rounded-lg" 
+                          className="p-1.5 sm:p-2 text-amber-500 hover:bg-amber-50 rounded-lg active:bg-amber-100 transition-colors" 
                           title="Reset Password"
                         >
-                          <KeyRound size={16} />
+                          <KeyRound size={14} className="sm:w-4 sm:h-4" />
                         </button>
                         <button 
                           onClick={() => handleEditUserClick(u)}
-                          className="p-2 text-jewel hover:bg-white/50 rounded-lg" 
+                          className="p-1.5 sm:p-2 text-jewel hover:bg-white/50 rounded-lg active:bg-white/70 transition-colors" 
                           title="Edit"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} className="sm:w-4 sm:h-4" />
                         </button>
                         <button 
                           onClick={() => handleDeleteUserClick(u)}
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg" 
+                          className="p-1.5 sm:p-2 text-red-500 hover:bg-red-50 rounded-lg active:bg-red-100 transition-colors" 
                           title="Delete"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={14} className="sm:w-4 sm:h-4" />
                         </button>
                       </div>
                     </td>
@@ -834,6 +835,7 @@ export default function Administration() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -874,30 +876,31 @@ export default function Administration() {
           </div>
 
           <div className="glass rounded-3xl overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="glass rounded-3x1 bg-frostee/30 border border-jewel">
-                <tr>
-                  <th className="py-4 px-6 font-semibold text-jewel">Title</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Type</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Author</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Status</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Date</th>
-                  <th className="py-4 px-6 font-semibold text-jewel text-right">Actions</th>
-                </tr>
-              </thead>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-frostee/30 border-b border-jewel/30 sticky top-0">
+                  <tr>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Title</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Type</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Author</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Status</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Date</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap text-right">Actions</th>
+                  </tr>
+                </thead>
               <tbody>
                 {filteredReports.map((r) => (
-                  <tr key={r.id} className="border-b border-jewel/5 hover:bg-white/30">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-jewel/10 rounded-lg">
-                          <FileText size={16} className="text-jewel" />
+                  <tr key={r.id} className="border-b border-jewel/5 hover:bg-white/30 transition-colors">
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div className="p-1.5 sm:p-2 bg-jewel/10 rounded-lg flex-shrink-0">
+                          <FileText size={14} className="sm:w-4 sm:h-4 text-jewel" />
                         </div>
-                        <span className="font-medium text-jewel">{r.title}</span>
+                        <span className="font-medium text-jewel truncate max-w-[120px] text-xs sm:text-sm">{r.title}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
                         r.type === 'sk' ? 'bg-blue-100 text-blue-700' :
                         r.type === 'lydc' ? 'bg-green-100 text-green-700' :
                         'bg-purple-100 text-purple-700'
@@ -905,17 +908,17 @@ export default function Administration() {
                         {r.type.toUpperCase()}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-jewel/80">{r.author_name}</td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(r.status)}`}>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 truncate max-w-[100px] text-xs sm:text-sm">{r.author_name}</td>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(r.status)}`}>
                         {formatStatus(r.status)}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-jewel/80">
-                      {new Date(r.created_at).toLocaleDateString()}
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 whitespace-nowrap text-xs sm:text-sm">
+                      {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      <button className="text-jewel hover:text-jewel/70 font-medium text-sm">
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-right">
+                      <button className="text-jewel hover:text-jewel/70 font-medium text-xs sm:text-sm whitespace-nowrap">
                         View Details
                       </button>
                     </td>
@@ -923,6 +926,7 @@ export default function Administration() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -938,51 +942,52 @@ export default function Administration() {
           </div>
 
           <div className="glass rounded-3xl overflow-hidden">
-            <table className="w-full text-left">
-              <thead className="glass rounded-3x1 bg-frostee/30 border border-jewel">
-                <tr>
-                  <th className="py-4 px-6 font-semibold text-jewel">Activity Name</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Assigned To</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Deadline</th>
-                  <th className="py-4 px-6 font-semibold text-jewel">Status</th>
-                  <th className="py-4 px-6 font-semibold text-jewel text-right">Actions</th>
-                </tr>
-              </thead>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-frostee/30 border-b border-jewel/30 sticky top-0">
+                  <tr>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Activity Name</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Assigned To</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Deadline</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap">Status</th>
+                    <th className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 font-semibold text-jewel whitespace-nowrap text-right">Actions</th>
+                  </tr>
+                </thead>
               <tbody>
                 {activities.map((a) => (
-                  <tr key={a.id} className="border-b border-jewel/5 hover:bg-white/30">
-                    <td className="py-4 px-6">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-jewel/10 rounded-lg">
-                          <Activity size={16} className="text-jewel" />
+                  <tr key={a.id} className="border-b border-jewel/5 hover:bg-white/30 transition-colors">
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                        <div className="p-1.5 sm:p-2 bg-jewel/10 rounded-lg flex-shrink-0">
+                          <Activity size={14} className="sm:w-4 sm:h-4 text-jewel" />
                         </div>
-                        <span className="font-medium text-jewel">{a.activity_name}</span>
+                        <span className="font-medium text-jewel truncate max-w-[120px] text-xs sm:text-sm">{a.activity_name}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-6 text-jewel/80">{a.assigned_to}</td>
-                    <td className="py-4 px-6 text-jewel/80">
-                      {new Date(a.submission_deadline).toLocaleDateString()}
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 truncate max-w-[100px] text-xs sm:text-sm">{a.assigned_to}</td>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-jewel/80 whitespace-nowrap text-xs sm:text-sm">
+                      {new Date(a.submission_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </td>
-                    <td className="py-4 px-6">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(a.reported_status)}`}>
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(a.reported_status)}`}>
                         {formatReportedStatus(a.reported_status)}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="py-3 px-3 sm:py-4 sm:px-4 md:px-6 text-right">
+                      <div className="flex items-center justify-end gap-1 sm:gap-2 flex-shrink-0">
                         <button 
                           onClick={() => handleEditActivityClick(a)}
-                          className="p-2 text-jewel hover:bg-white/50 rounded-lg" 
+                          className="p-1.5 sm:p-2 text-jewel hover:bg-white/50 rounded-lg active:bg-white/70 transition-colors" 
                           title="Edit"
                         >
-                          <Edit size={16} />
+                          <Edit size={14} className="sm:w-4 sm:h-4" />
                         </button>
                         <button 
                           onClick={() => handleMarkActivityComplete(a)}
-                          className="p-2 text-green-600 hover:bg-green-50 rounded-lg" 
+                          className="p-1.5 sm:p-2 text-green-600 hover:bg-green-50 rounded-lg active:bg-green-100 transition-colors" 
                           title="Mark Complete"
                         >
-                          <Check size={16} />
+                          <Check size={14} className="sm:w-4 sm:h-4" />
                         </button>
                       </div>
                     </td>
@@ -990,6 +995,7 @@ export default function Administration() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}

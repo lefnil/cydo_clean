@@ -44,47 +44,120 @@ export const DataTable = <T extends Record<string, any>>({
     return matchesSearch && matchesFilter;
   });
 
+  if (filteredData.length === 0) {
+    return (
+      <div className={`glass rounded-3xl overflow-hidden ${className}`}>
+        <div className="py-12 text-center text-jewel/50">
+          {emptyMessage}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`glass rounded-3xl overflow-hidden ${className}`}>
-      <table className="w-full text-left">
-        <thead className="bg-frostee/30 border border-jewel/30">
-          <tr>
-            {columns.map((column, index) => (
-              <th 
-                key={String(column.key)} 
-                className={`py-4 px-6 font-semibold text-jewel ${column.className || ''}`}
-              >
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((item, index) => (
-            <tr 
-              key={String(item.id || index)} 
-              className="border-b border-jewel/5 hover:bg-white/30 transition-colors cursor-pointer"
-              onClick={() => onRowClick?.(item, index)}
-            >
-              {columns.map((column) => (
-                <td key={String(column.key)} className={`py-4 px-6 ${column.className || ''}`}>
-                  {column.render 
-                    ? column.render(item, index)
-                    : String(item[column.key] || '')
-                  }
-                </td>
+    <div className={`${className}`}>
+      {/* Desktop Table View */}
+      <div className="hidden md:block glass rounded-3xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-frostee/30 border border-jewel/30">
+              <tr>
+                {columns.map((column, index) => (
+                  <th 
+                    key={String(column.key)} 
+                    className={`py-4 px-4 lg:px-6 font-semibold text-jewel whitespace-nowrap ${column.className || ''}`}
+                  >
+                    {column.header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((item, index) => (
+                <tr 
+                  key={String(item.id || index)} 
+                  className="border-b border-jewel/5 hover:bg-white/30 transition-colors cursor-pointer"
+                  onClick={() => onRowClick?.(item, index)}
+                >
+                  {columns.map((column) => (
+                    <td key={String(column.key)} className={`py-4 px-4 lg:px-6 ${column.className || ''}`}>
+                      {column.render 
+                        ? column.render(item, index)
+                        : String(item[column.key] || '')
+                      }
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-          {filteredData.length === 0 && (
-            <tr>
-              <td colSpan={columns.length} className="py-12 text-center text-jewel/50">
-                {emptyMessage}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3 sm:space-y-4">
+        {filteredData.map((item, index) => (
+          <div
+            key={String(item.id || index)}
+            onClick={() => onRowClick?.(item, index)}
+            className="glass rounded-2xl p-4 sm:p-5 cursor-pointer hover:shadow-lg transition-all duration-200 active:bg-white/40"
+          >
+            {/* Primary Column (Usually Name/Title) */}
+            {columns[0] && (
+              <div className="mb-3 pb-3 border-b border-jewel/10">
+                <p className="text-xs font-medium text-jewel/60 uppercase tracking-wide mb-1">
+                  {columns[0].header}
+                </p>
+                <p className="font-semibold text-jewel text-base break-words">
+                  {columns[0].render 
+                    ? columns[0].render(item, index)
+                    : String(item[columns[0].key] || '-')
+                  }
+                </p>
+              </div>
+            )}
+
+            {/* Remaining Columns in Grid */}
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              {columns.slice(1, -1).map((column) => (
+                <div key={String(column.key)}>
+                  <p className="text-xs font-medium text-jewel/60 uppercase tracking-wide mb-1">
+                    {column.header}
+                  </p>
+                  <p className="text-jewel/80 text-sm break-words">
+                    {column.render 
+                      ? column.render(item, index)
+                      : String(item[column.key] || '-')
+                    }
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Actions Row */}
+            {columns.length > 0 && (
+              <div className="flex items-center justify-between pt-3 border-t border-jewel/10">
+                <div className="text-xs font-medium text-jewel/60">
+                  {columns[columns.length - 1] && (
+                    <>
+                      {columns[columns.length - 1].header}
+                    </>
+                  )}
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    actionClick?.(item, 'view');
+                  }}
+                  className="text-jewel hover:text-jewel/70 font-medium text-sm px-3 py-1 rounded-lg hover:bg-jewel/10 transition-colors"
+                >
+                  View
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

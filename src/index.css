@@ -37,6 +37,247 @@ html.dark body {
 
 }
 
+/* Responsive Flexbox Utilities */
+@layer components {
+  /* Flex Direction Responsive */
+  .flex-col-sm {
+    @apply flex-col;
+  }
+  
+  @screen sm {
+    .flex-col-sm {
+      @apply flex-col;
+    }
+  }
+  
+  @screen md {
+    .flex-col-sm {
+      @apply flex-col;
+    }
+  }
+  
+  .flex-row-md {
+    @apply flex-col;
+  }
+  
+  @screen md {
+    .flex-row-md {
+      @apply flex-row;
+    }
+  }
+  
+  .flex-row-lg {
+    @apply flex-col;
+  }
+  
+  @screen lg {
+    .flex-row-lg {
+      @apply flex-row;
+    }
+  }
+  
+  /* Gap Responsive */
+  .gap-responsive-sm {
+    @apply gap-2;
+  }
+  
+  @screen sm {
+    .gap-responsive-sm {
+      @apply gap-3;
+    }
+  }
+  
+  @screen md {
+    .gap-responsive-sm {
+      @apply gap-4;
+    }
+  }
+  
+  @screen lg {
+    .gap-responsive-sm {
+      @apply gap-6;
+    }
+  }
+  
+  /* Padding Responsive */
+  .p-responsive-sm {
+    @apply p-3;
+  }
+  
+  @screen sm {
+    .p-responsive-sm {
+      @apply p-4;
+    }
+  }
+  
+  @screen md {
+    .p-responsive-sm {
+      @apply p-5;
+    }
+  }
+  
+  @screen lg {
+    .p-responsive-sm {
+      @apply p-6;
+    }
+  }
+  
+  .px-responsive-sm {
+    @apply px-3;
+  }
+  
+  @screen sm {
+    .px-responsive-sm {
+      @apply px-4;
+    }
+  }
+  
+  @screen md {
+    .px-responsive-sm {
+      @apply px-5;
+    }
+  }
+  
+  @screen lg {
+    .px-responsive-sm {
+      @apply px-6;
+    }
+  }
+  
+  /* Grid Responsive Layouts */
+  .grid-auto-fit {
+    @apply grid grid-cols-1 gap-3;
+  }
+  
+  @screen sm {
+    .grid-auto-fit {
+      @apply grid-cols-2 gap-4;
+    }
+  }
+  
+  @screen lg {
+    .grid-auto-fit {
+      @apply grid-cols-3 gap-5;
+    }
+  }
+  
+  @screen xl {
+    .grid-auto-fit {
+      @apply grid-cols-4 gap-6;
+    }
+  }
+  
+  .grid-auto-fit-2 {
+    @apply grid grid-cols-1 gap-3;
+  }
+  
+  @screen sm {
+    .grid-auto-fit-2 {
+      @apply grid-cols-2 gap-4;
+    }
+  }
+  
+  @screen lg {
+    .grid-auto-fit-2 {
+      @apply grid-cols-3 gap-5;
+    }
+  }
+  
+  .grid-auto-fit-sm {
+    @apply grid grid-cols-1 gap-3;
+  }
+  
+  @screen sm {
+    .grid-auto-fit-sm {
+      @apply grid-cols-1 gap-3;
+    }
+  }
+  
+  @screen md {
+    .grid-auto-fit-sm {
+      @apply grid-cols-2 gap-4;
+    }
+  }
+  
+  @screen lg {
+    .grid-auto-fit-sm {
+      @apply grid-cols-3 gap-5;
+    }
+  }
+  
+  /* Container Width Responsive */
+  .container-full {
+    @apply w-full;
+  }
+  
+  .container-resp {
+    @apply w-full max-w-full;
+  }
+  
+  @screen sm {
+    .container-resp {
+      @apply max-w-sm;
+    }
+  }
+  
+  @screen md {
+    .container-resp {
+      @apply max-w-2xl;
+    }
+  }
+  
+  @screen lg {
+    .container-resp {
+      @apply max-w-4xl;
+    }
+  }
+  
+  @screen xl {
+    .container-resp {
+      @apply max-w-6xl;
+    }
+  }
+  
+  /* Text Size Responsive */
+  .text-responsive {
+    @apply text-sm;
+  }
+  
+  @screen sm {
+    .text-responsive {
+      @apply text-base;
+    }
+  }
+  
+  @screen md {
+    .text-responsive {
+      @apply text-lg;
+    }
+  }
+  
+  .text-responsive-heading {
+    @apply text-lg;
+  }
+  
+  @screen sm {
+    .text-responsive-heading {
+      @apply text-xl;
+    }
+  }
+  
+  @screen md {
+    .text-responsive-heading {
+      @apply text-2xl;
+    }
+  }
+  
+  @screen lg {
+    .text-responsive-heading {
+      @apply text-3xl;
+    }
+  }
+}
+
 @layer utilities {
   .glass {
     @apply bg-white/30 backdrop-blur-md border-2 border-white/30 border-jewel/30 shadow-xl;
@@ -64,6 +305,115 @@ html.dark body {
   /* Outline */
   .btn-outline {
     @apply bg-[hsl(var(--color-frostee))] hover:bg-white text-gray-900 border-2 border-jewel/40 hover:border-jewel hover:shadow-md hover:shadow-jewel/30 transition-all font-medium px-4 py-2 rounded-xl dark:bg-[hsl(var(--color-frostee))] dark:text-white dark:border-jewel/50 dark:hover:bg-[hsl(var(--color-frostee)/0.95)] dark:hover:shadow-jewel/40 focus:ring-4 focus:ring-jewel/50;
+  }
+
+  /* Responsive Button Sizes */
+  .btn-responsive {
+    @apply px-3 py-2 text-sm;
+  }
+  
+  @screen sm {
+    .btn-responsive {
+      @apply px-4 py-2;
+    }
+  }
+  
+  @screen md {
+    .btn-responsive {
+      @apply px-6 py-3 text-base;
+    }
+  }
+
+  /* Flex Utilities */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .flex-start {
+    @apply flex items-start justify-start;
+  }
+
+  /* Grid Responsive with Dynamic Gap */
+  .grid-dynamic {
+    @apply grid gap-3;
+  }
+  
+  @screen sm {
+    .grid-dynamic {
+      @apply gap-4;
+    }
+  }
+  
+  @screen md {
+    .grid-dynamic {
+      @apply gap-5;
+    }
+  }
+  
+  @screen lg {
+    .grid-dynamic {
+      @apply gap-6;
+    }
+  }
+
+  /* Responsive Widths */
+  .w-responsive-full {
+    @apply w-full;
+  }
+  
+  @screen sm {
+    .w-responsive-full {
+      @apply w-full;
+    }
+  }
+  
+  @screen md {
+    .w-responsive-full {
+      @apply w-10/12;
+    }
+  }
+  
+  @screen lg {
+    .w-responsive-full {
+      @apply w-11/12;
+    }
+  }
+
+  /* Responsive Sidebar State */
+  .sidebar-visible {
+    @apply block;
+  }
+  
+  @screen md {
+    .sidebar-visible {
+      @apply block;
+    }
+  }
+
+  /* Card Responsive Padding */
+  .card-padding {
+    @apply p-4 sm:p-5 md:p-6 lg:p-8;
+  }
+
+  /* Safe Mobile Spacing */
+  .safe-mobile-margin {
+    @apply mb-2 sm:mb-3 md:mb-4 lg:mb-6;
+  }
+
+  /* Scrollable Area Responsive */
+  .scrollable-responsive {
+    @apply overflow-y-auto;
+    max-height: calc(100vh - 200px);
+  }
+  
+  @screen md {
+    .scrollable-responsive {
+      max-height: calc(100vh - 150px);
+    }
   }
 }
 

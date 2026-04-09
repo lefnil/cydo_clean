@@ -49,21 +49,21 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
   const COLORS = ['#177d49', '#f59e0b', '#3b82f6', '#ef4444'];
 
   return (
-    <div className="space-y-6">
-      {/* Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Status Cards - Responsive Grid */}
+      <div className="grid-auto-fit gap-responsive-sm">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-2xl p-5"
+          className="glass rounded-2xl p-responsive-sm"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-jewel/70">All Reports</p>
-              <h3 className="text-3xl font-bold text-jewel">{stats.total}</h3>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium text-jewel/70 truncate">All Reports</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-jewel mt-1">{stats.total}</h3>
             </div>
-            <div className="p-3 bg-jewel/10 rounded-xl">
-              <FileText size={24} className="text-jewel" />
+            <div className="p-2 sm:p-3 bg-jewel/10 rounded-xl flex-shrink-0">
+              <FileText size={20} className="sm:w-6 sm:h-6 text-jewel" />
             </div>
           </div>
         </motion.div>
@@ -72,15 +72,15 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass rounded-2xl p-5"
+          className="glass rounded-2xl p-responsive-sm"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-jewel/70">Awaiting Review</p>
-              <h3 className="text-3xl font-bold text-amber-600">{stats.awaitingReview}</h3>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium text-jewel/70 truncate">Awaiting Review</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-amber-600 mt-1">{stats.awaitingReview}</h3>
             </div>
-            <div className="p-3 bg-amber-100 rounded-xl">
-              <Clock size={24} className="text-amber-600" />
+            <div className="p-2 sm:p-3 bg-amber-100 rounded-xl flex-shrink-0">
+              <Clock size={20} className="sm:w-6 sm:h-6 text-amber-600" />
             </div>
           </div>
         </motion.div>
@@ -89,15 +89,15 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="glass rounded-2xl p-5"
+          className="glass rounded-2xl p-responsive-sm"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-jewel/70">Approved Reports</p>
-              <h3 className="text-3xl font-bold text-green-600">{stats.approved}</h3>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium text-jewel/70 truncate">Approved Reports</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-green-600 mt-1">{stats.approved}</h3>
             </div>
-            <div className="p-3 bg-green-100 rounded-xl">
-              <CheckCircle size={24} className="text-green-600" />
+            <div className="p-2 sm:p-3 bg-green-100 rounded-xl flex-shrink-0">
+              <CheckCircle size={20} className="sm:w-6 sm:h-6 text-green-600" />
             </div>
           </div>
         </motion.div>
@@ -106,35 +106,35 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="glass rounded-2xl p-5"
+          className="glass rounded-2xl p-responsive-sm"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-jewel/70">Total Beneficiaries</p>
-              <h3 className="text-3xl font-bold text-jewel">{stats.totalBeneficiaries.toLocaleString()}</h3>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs sm:text-sm font-medium text-jewel/70 truncate">Total Beneficiaries</p>
+              <h3 className="text-2xl sm:text-3xl font-bold text-jewel mt-1">{stats.totalBeneficiaries.toLocaleString()}</h3>
             </div>
-            <div className="p-3 bg-jewel/10 rounded-xl">
-              <Users size={24} className="text-jewel" />
+            <div className="p-2 sm:p-3 bg-jewel/10 rounded-xl flex-shrink-0">
+              <Users size={20} className="sm:w-6 sm:h-6 text-jewel" />
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Charts and Recent Table */}
+      {/* Charts and Recent Table - Stacked on mobile, side-by-side on lg */}
       {records.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-responsive-sm">
           {/* Status Pie Chart */}
-          <div className="glass rounded-3xl p-6 lg:col-span-1">
-            <h2 className="text-lg font-bold text-jewel mb-4">Status Breakdown</h2>
-            <div className="h-[200px]">
+          <div className="glass rounded-3xl p-responsive-sm lg:col-span-1">
+            <h2 className="text-responsive-heading font-bold text-jewel mb-3 sm:mb-4">Status Breakdown</h2>
+            <div className="h-[250px] sm:h-[280px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={statusData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
+                    innerRadius={40}
+                    outerRadius={70}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -143,50 +143,51 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                     ))}
                   </Pie>
                   <RechartsTooltip />
-                  <Legend verticalAlign="bottom" height={36} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ paddingTop: '10px' }} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Recent Records Table */}
-          <div className="glass rounded-3xl p-6 lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-jewel">Recent MEAL Records</h2>
+          <div className="glass rounded-3xl p-responsive-sm lg:col-span-2 overflow-hidden flex flex-col">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-jewel/10">
+              <h2 className="text-responsive-heading font-bold text-jewel">Recent MEAL Records</h2>
               <input
                 type="text"
-                placeholder="Search records..."
+                placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 bg-frostee/50 border border-white/30 rounded-xl text-sm focus:ring-2 focus:ring-jewel focus:border-transparent outline-none"
+                className="w-full sm:w-auto px-3 py-2 bg-frostee/50 border border-white/30 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-jewel focus:border-transparent outline-none transition-all"
               />
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead>
+            
+            <div className="overflow-x-auto flex-1">
+              <table className="w-full text-left text-xs sm:text-sm">
+                <thead className="bg-frostee/20">
                   <tr className="border-b border-jewel/10">
-                    <th className="py-3 px-3 font-semibold text-jewel/70 text-sm">Project Name</th>
-                    <th className="py-3 px-3 font-semibold text-jewel/70 text-sm">Author</th>
-                    <th className="py-3 px-3 font-semibold text-jewel/70 text-sm">Date</th>
-                    <th className="py-3 px-3 font-semibold text-jewel/70 text-sm">Status</th>
-                    <th className="py-3 px-3 font-semibold text-jewel/70 text-sm text-right">Actions</th>
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-jewel/70 whitespace-nowrap">Project</th>
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-jewel/70 whitespace-nowrap">Author</th>
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-jewel/70 whitespace-nowrap">Date</th>
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-jewel/70 whitespace-nowrap">Status</th>
+                    <th className="py-2 sm:py-3 px-2 sm:px-3 font-semibold text-jewel/70 text-right whitespace-nowrap">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredRecords.slice(0, 5).map((record) => (
-                    <tr key={record.id} className="border-b border-jewel/5 hover:bg-white/30">
-                      <td className="py-3 px-3 text-jewel font-medium text-sm">{record.ppa_name}</td>
-                      <td className="py-3 px-3 text-jewel/70 text-sm">{record.author_name}</td>
-                      <td className="py-3 px-3 text-jewel/70 text-sm">
-                        {new Date(record.created_at).toLocaleDateString()}
+                    <tr key={record.id} className="border-b border-jewel/5 hover:bg-white/30 transition-colors">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 text-jewel font-medium truncate max-w-[120px]">{record.ppa_name}</td>
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 text-jewel/70 truncate max-w-[100px]">{record.author_name}</td>
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 text-jewel/70 whitespace-nowrap">
+                        {new Date(record.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </td>
-                      <td className="py-3 px-3">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3">
                         <StatusBadge status={record.status as any} />
                       </td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-2 sm:py-3 px-2 sm:px-3 text-right">
                         <button 
                           onClick={() => onViewDetails(record)}
-                          className="text-jewel hover:text-jewel/70 text-sm font-medium"
+                          className="text-jewel hover:text-jewel/70 text-xs sm:text-sm font-medium whitespace-nowrap"
                         >
                           View
                         </button>
